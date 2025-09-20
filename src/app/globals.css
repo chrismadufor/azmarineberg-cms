@@ -1,17 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* styles/globals.css */
 :root {
-  --font-body: 'Plus Jakarta Sans', sans-serif;
-  --font-heading: 'Poppins', serif;
+  --font-body: "Lato", sans-serif;
+  --font-heading: "Poppins", serif;
 }
 
 body {
   font-family: var(--font-body);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
+}
+
+/* .hide_scrollbar:: */
+.overflow-scroll::-webkit-scrollbar,
+.overflow-y-scroll::-webkit-scrollbar,
+.overflow-x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-scroll,
+.overflow-y-scroll,
+.overflow-x-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.wrap {
+  padding: 0 5%;
 }
