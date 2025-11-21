@@ -58,7 +58,7 @@ export default function Table({
   return (
     <div>
       {data?.current_page && (
-        <p className="mb-2 italic font-medium text-right">
+        <p className="mb-2 italic font-medium text-right text-sm">
           Showing {startCount} to {endCount} of {data?.total}
         </p>
       )}

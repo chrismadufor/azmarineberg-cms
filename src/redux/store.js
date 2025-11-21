@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import dashboardReducer from "./slices/dashboardSlice";
+import adminReducer from "./slices/adminSlice";
 import toastReducer from "./slices/ToastSlice"
 import sessionStorage from "redux-persist/lib/storage/session";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
@@ -26,6 +27,7 @@ const reducers = combineReducers({
   toast: toastReducer,
   auth: authReducer,
   dashboard: dashboardReducer,
+  admin: adminReducer,
   // users: usersReducer,
   // notification: notificationReducer,
 });

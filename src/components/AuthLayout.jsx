@@ -5,15 +5,16 @@ export default function AuthLayout({ children }) {
     <div className="">
       <div className="grid grid-cols-2">
         {/* image */}
-        <div className="bg-green-600 min-h-screen max-h-[600px] flex items-end px-5 pb-20">
+        <div className="auth-bg min-h-screen max-h-[600px] flex items-end px-5 pb-20">
           <div className="text-white">
             <h1 className="font-semibold mb-3 text-2xl">
               Azmarineberg Limited
             </h1>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa
-              dolorum autem sint, impedit assumenda quis quasi tempora harum
-              unde ducimus?
+              We deliver uncompromising integrity, Azmarineberg Limited strives
+              to earn enduring credibility through commitment and loyalty, which
+              we believe is essential in building long-term personal and
+              business relationships
             </p>
           </div>
         </div>

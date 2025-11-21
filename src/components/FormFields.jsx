@@ -39,7 +39,7 @@ export const  TextLabelInput = ({ label, ...props }) => {
         {label}
       </label>
       <input
-        className="text-input block w-full border border-gray-400 h-12 rounded-md px-3"
+        className="text-input block w-full border border-gray-400 h-12 rounded-md px-3 outline-none"
         {...field}
         {...props}
         type={props.type}

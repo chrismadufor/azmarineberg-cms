@@ -28,7 +28,7 @@ const abcOptions = {
 };
 
 export const getToken = () => {
-  return sessionStorage.getItem("lasepaToken");
+  return sessionStorage.getItem("azToken");
 };
 
 export const http = axios.create(options);
@@ -65,11 +65,10 @@ export const abcHttp = axios.create(abcOptions);
 
 abcHttp.interceptors.request.use(
   (config) => {
-    // const token = getToken();
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
-    config.headers.Authorization = `0PUB0615sBJz3KR1VGj7eCpEY0po4rdK`;
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {

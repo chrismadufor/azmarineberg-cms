@@ -12,8 +12,10 @@ import { setLogout } from "@/redux/slices/authSlice";
 export default function TopNav() {
   const dispatch = useDispatch();
   const [showNav, setShowNav] = useState(false);
-  const user = useSelector((state) => state.auth.user);
-  const role = user?.userType;
+  const user = useSelector((state) => state.auth.userProfile);
+
+  const role = user?.role === "admin" || user?.role === "superAdmin" ? "admin" : "user";
+
   const logout = () => {
     dispatch(setLogout(true));
   };
@@ -36,14 +38,14 @@ export default function TopNav() {
             </div>
           </div>
             <div
-              className="w-4 primary_text xl:hidden"
+              className="w-4 text-primary xl:hidden"
               onClick={() => setShowNav(!showNav)}
             >
               <FontAwesomeIcon icon={showNav ? faTimes : faBars} />
             </div>
           <div className="hidden xl:block">
-            <p className="font-semibold uppercase">{user?.fullName || "Denario Tech"}</p>
-            <p className="text-xs uppercase">{user?.userType || "User"}</p>
+            <p className="font-semibold uppercase">{user?.fullName}</p>
+            <p className="text-xs uppercase">{role}</p>
           </div>
           {navLinks[role] && showNav && (
             <div
@@ -68,7 +70,7 @@ export default function TopNav() {
                   className={`flex items-center w-full px-5 py-4 cursor-pointer grey_text text-sm`}
                 >
                   <FontAwesomeIcon
-                    className="primary_text w-5"
+                    className="text-primary w-5"
                     icon={faSignOut}
                   />
                   <h1 className="ml-2 capitalize">Logout</h1>

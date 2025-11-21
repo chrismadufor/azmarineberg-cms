@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import { useState } from "react";
-import { errorHandler } from "@/utils/utils";
+import { handleAPIError } from "@/utils/utils";
 import { useDispatch } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
 import { useRouter } from "next/navigation";
@@ -44,12 +44,7 @@ export default function ForgotPassword() {
               router.push("/reset-password");
             } else {
               setLoading(false);
-              dispatch(
-                showToast({
-                  status: "error",
-                  message: errorHandler(response.data),
-                })
-              );
+              handleAPIError(response, dispatch, router, showToast);
             }
           }}
         >

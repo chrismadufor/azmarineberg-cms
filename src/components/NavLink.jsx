@@ -26,16 +26,16 @@ export default function NavLink({ name, icon, link, role, approval, mobile, subs
               ? `/admin/${link}`
               : `/dashboard/${link}`
           }
-          className={`flex md:text-white items-center w-full grey_text ${
+          className={`flex md:text-black items-center w-full grey_text rounded-lg hover:bg-gray-50 ${
             isActive
-              ? "xl:border-r-[6px] font-medium xl:border-gray-200"
+              ? "font-medium bg-green-50 hover:bg-green-50 border border-green-200 p-2"
               : ""
-          } ${mobile ? "border-b px-5 py-4 text-sm" : "mb-6 py-1 px-2" }`}
+          } ${mobile ? "border-b px-5 py-4 text-sm" : "my-2 p-3" }`}
         >
-          <p className={`w-5 ${mobile ? "primary_text" : "text-white"}`}>
+          <p className={`w-5 text-primary`}>
             <FontAwesomeIcon icon={icon} />
           </p>
-          <span className="ml-2 capitalize text-black xl:text-white">{name}</span>
+            <span className="ml-2 capitalize text-sm text-black">{name}</span>
         </Link>
       </div>
     </div>

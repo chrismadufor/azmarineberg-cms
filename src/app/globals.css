@@ -8,6 +8,7 @@
 :root {
   --font-body: "Lato", sans-serif;
   --font-heading: "Poppins", serif;
+  --toastify-color-success: #134A32 !important;
 }
 
 body {
@@ -39,4 +40,12 @@ h6 {
 
 .wrap {
   padding: 0 5%;
+}
+
+.auth-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8)),
+    url("/auth.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

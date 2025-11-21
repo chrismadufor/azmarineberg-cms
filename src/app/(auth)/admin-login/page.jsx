@@ -10,11 +10,11 @@ import { handleAPIError } from "@/utils/utils";
 import { useDispatch } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
 import { useRouter } from "next/navigation";
-import { resendOtp, signin } from "@/services/authService";
+import { resendOtp, adminSignin } from "@/services/authService";
 import { saveEmail, setUserProfile } from "@/redux/slices/authSlice";
 import AuthLayout from "@/components/AuthLayout";
 
-export default function Login() {
+export default function AdminLogin() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,9 @@ export default function Login() {
       <div className="">
         <div>
           <div className="flex flex-col gap-1">
-            <h1 className="text-lg md:text-xl font-semibold">Welcome back</h1>
+            <h1 className="text-lg md:text-xl font-semibold">
+              Welcome back Admin!
+            </h1>
             <p className="text-sm">Enter your details to access your account</p>
           </div>
         </div>
@@ -60,25 +62,19 @@ export default function Login() {
             })}
             onSubmit={async (values) => {
               setLoading(true);
-              const response = await signin(values);
+              const response = await adminSignin(values);
               console.log("Log in response", response);
               if (!response.error) {
                 setLoading(false);
-                sessionStorage.setItem("azToken", response.data.data.token);
-                dispatch(setUserProfile(response.data.data.user));
+                sessionStorage.setItem("azToken", response.data.data.data.token);
+                dispatch(setUserProfile(response.data.data.data.admin));
                 dispatch(
                   showToast({
                     status: "success",
                     message: "Log in successful",
                   })
                 );
-                // router.push(
-                //   response.data.data.user.userType === "admin"
-                //     ? "/admin"
-                //     : response.data.data.user.userType === "consultant"
-                //     ? "/consultant"
-                //     : "/company"
-                // );
+                router.push("/admin");
               } else {
                 setLoading(false);
                 if (response.status === 409) {
@@ -106,7 +102,7 @@ export default function Login() {
                 />
               </div>
               <Link href={"/forgot-password"}>
-                <p className="text-gray-500 hover:text-gray-700 text-sm mt-2 font-medium mb-3 primary_text">
+                <p className="text-gray-500 hover:text-gray-700 text-sm mt-2 font-medium mb-3 text-primary">
                   Forgot your password?
                 </p>
               </Link>

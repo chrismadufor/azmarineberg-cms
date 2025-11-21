@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import { useState } from "react";
-import { errorHandler } from "@/utils/utils";
+import { handleAPIError } from "@/utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
 import { useRouter } from "next/navigation";
@@ -55,12 +55,7 @@ export default function ResetPassword() {
               router.push("/login");
             } else {
               setLoading(false);
-              dispatch(
-                showToast({
-                  status: "error",
-                  message: errorHandler(response.data),
-                })
-              );
+              handleAPIError(response, dispatch, router, showToast);
             }
           }}
         >
@@ -86,7 +81,7 @@ export default function ResetPassword() {
               />
             </div>
             <button
-              className="font-semibold w-full block h-12 rounded-lg mt-8 primary_bg text-white hover:bg-green-800 active:scale-[0.98]"
+              className="font-semibold w-full block h-12 rounded-lg mt-8 bg-primary text-white hover:bg-green-800 active:scale-[0.98]"
               type="submit"
               disabled={loading}
             >

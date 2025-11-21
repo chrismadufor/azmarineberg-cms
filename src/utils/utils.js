@@ -8,27 +8,42 @@ export const naira = "₦";
 
 export const perPage = 100;
 
-const envUrl = process.env.NEXT_BASE_URL;
-
 // test
-// export const baseUrl = "https://lasepa-le2w.onrender.com/api/v1/";
+export const baseUrl = "https://azmarineberg-server.onrender.com/api/v1/";
 
 // live
-export const baseUrl = "https://server.lasepaonline.com/api/v1/";
+// export const baseUrl = "https://server.lasepaonline.com/api/v1/";
 // export const baseUrl = "https://lasepaserver.onrender.com/api/v1/";
 
-// GUIDES
-export const consultantGuides =
-  "https://lasepaonline.notion.site/1618c679007b8013b5cff345429bcb80?v=600ac7cab2e640d08e6ea1ee393ad6df";
-
-export const companyGuides =
-  "https://lasepaonline.notion.site/1568c679007b80cbaa18e7f797361b0d?v=5245f41ffbfe492caa7c54c4c864062d&pvs=4";
-
 export const clearToken = () => {
-  sessionStorage.removeItem("lasepaToken");
+  sessionStorage.removeItem("azToken");
 };
 
-export const errorHandler = (err) => {
+// utils/errorHandlers.js
+export const handleAPIError = (
+  response,
+  dispatch,
+  router,
+  showToast
+) => {
+  if (response.status === 401) {
+    dispatch(
+      showToast({
+        status: "error",
+        message: response.data.message,
+      })
+    );
+    return router.push("/login");
+  }
+  dispatch(
+    showToast({
+      status: "error",
+      message: getErrorMessage(response.data),
+    })
+  );
+};
+
+export const getErrorMessage = (err) => {
   if (!err) return;
   let errMsg;
   if (err.message) errMsg = err.message;
@@ -142,7 +157,7 @@ export const getStatusColor = (status) => {
   )
     return "red_text red_button_bg rounded-lg";
   else if (status === "active" || status === "in progress")
-    return "primary_text purple_button_bg rounded-lg";
+    return "text-primary purple_button_bg rounded-lg";
   else if (status === "pending" || status === "new" || status === "not started")
     return "orange_text orange_bg rounded-lg";
   else if (status === "completed" || status === "success")
@@ -334,7 +349,7 @@ export const paymentStatusValue = (status) => {
 };
 
 export const reportStatusColor = (status) => {
-  if (status === "approved") return "primary_bg";
+  if (status === "approved") return "bg-primary";
   else if (status === "rejected") return "red_bg text-white";
   else if (status === "returned" || status === "not_paid")
     return "dark_gray text-white block";
@@ -342,19 +357,19 @@ export const reportStatusColor = (status) => {
 };
 
 export const paymentStatusColor = (status) => {
-  if (status === "paid") return "primary_bg";
+  if (status === "paid") return "bg-primary";
   else return "dark_gray text-white block";
 };
 
 export const reportStatusTextColor = (status) => {
-  if (status === "approved") return "primary_text";
+  if (status === "approved") return "text-primary";
   else if (status === "rejected") return "red_text";
   else if (status === "returned") return "text-gray-700";
   else return "orange_text";
 };
 
 export const userStatusTextColor = (status) => {
-  if (status === "active") return "primary_text";
+  if (status === "active") return "text-primary";
   else if (status === "submitted") return "orange_text";
   else if (status === "scheduled") return "text-purple-600";
   else return "red_text";
@@ -372,10 +387,28 @@ export const getSerialNumber = (index, currentPage) => {
   return number;
 };
 
-export const EIACheck = (value) => {
-  let regex = /Environmental Impact Assessment/i;
-  let result = regex.test(value);
-  return result;
+export const getRequestStatusColor = (status) => {
+  if (!status) return { bg: "bg-gray-100", text: "text-gray-700" };
+  
+  const statusLower = status.toLowerCase();
+  
+  switch (statusLower) {
+    case "completed":
+      return { bg: "bg-green-100", text: "text-green-700" };
+    case "processing":
+      return { bg: "bg-blue-100", text: "text-blue-700" };
+    case "pending":
+      return { bg: "bg-orange-100", text: "text-orange-700" };
+    case "rejected":
+      return { bg: "bg-red-100", text: "text-red-700" };
+    default:
+      return { bg: "bg-gray-100", text: "text-gray-700" };
+  }
+};
+
+export const formatRequestStatus = (status) => {
+  if (!status) return "Pending";
+  return status.charAt(0).toUpperCase() + status.slice(1);
 };
 
 export const formatPhone = (phone) => {

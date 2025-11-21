@@ -2,16 +2,20 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   services: [],
+  users: [],
   requests: [],
   analytics: {},
 };
 
-const dashboardSlice = createSlice({
-  name: "dashboard",
+const adminSlice = createSlice({
+  name: "admin",
   initialState,
   reducers: {
     saveServices: (state, { payload }) => {
       state.services = payload;
+    },
+    saveUsers: (state, { payload }) => {
+      state.users = payload;
     },
     saveRequests: (state, { payload }) => {
       state.requests = payload;
@@ -22,5 +26,6 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { saveProducts, saveSales, saveCustomers } = dashboardSlice.actions;
-export default dashboardSlice.reducer;
+export const { saveServices, saveUsers, saveRequests, saveAnalytics } = adminSlice.actions;
+export default adminSlice.reducer;
+

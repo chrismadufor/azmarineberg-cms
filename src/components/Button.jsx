@@ -25,8 +25,8 @@ export default function Button({
           : color === "red"
           ? "red_bg text-white hover:bg-red-800"
           : color === "transparent"
-          ? "bg-transparent border primary_border primary_text hover:text-white hover:bg-green-600"
-          : "bg-white primary_text hover:bg-gray-100"
+          ? "bg-transparent border primary_border text-primary hover:text-white hover:bg-green-600"
+          : "bg-white text-primary hover:bg-gray-100"
       }`}
       disabled={loading}
     >

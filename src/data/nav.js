@@ -5,7 +5,7 @@ export const navLinks = {
     {
       name: "dashboard",
       icon: faHome,
-      link: "/",
+      link: "",
       needsApproval: false,
     },
     {
@@ -26,5 +26,33 @@ export const navLinks = {
       link: "profile",
       needsApproval: true,
     }
+  ],
+  admin: [
+    {
+      name: "dashboard",
+      icon: faHome,
+      link: "",
+    },
+    {
+      name: "users",
+      icon: faUsers,
+      link: "users",
+    },
+    
+    {
+      name: "requests",
+      icon: faListCheck,
+      link: "requests",
+    },
+    {
+      name: "services",
+      icon: faDatabase,
+      link: "services",
+    },
+    // {
+    //   name: "admins",
+    //   icon: faCogs,
+    //   link: "admin-users",
+    // }
   ],
 };

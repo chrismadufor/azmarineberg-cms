@@ -1,8 +1,8 @@
 import DashboardLayout from "@/components/DashboardLayout";
 
-export default function AdminHomeLayout({ children }) {
+export default function DashboardHomeLayout({ children }) {
     return (
-      <DashboardLayout role={"user"}>
+      <DashboardLayout role={"admin"}>
         {children}
       </DashboardLayout>
     );
