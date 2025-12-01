@@ -34,7 +34,7 @@ export default function AdminUsersPage() {
   const initialFilters = { pageNumber: 1, searchByName: "", searchByEmail: "", searchByPhone: "", searchByRole: "" };
   const [filters, setFilters] = useState(initialFilters);
 
-  const columns = ["Name", "Email", "Phone", "Role", "Assigned Requests", "Actions"];
+  const columns = ["Name", "Email", "Role", "Actions"];
   const mobileColumns = ["Name", "Role"]; 
 
   const filterData = [
@@ -49,10 +49,10 @@ export default function AdminUsersPage() {
   const getAdminUsers = async (f) => {
     setLoading(true);
     const response = await fetchAdminUsers(f);
-    console.log("Admin Users (Admins) API Response:", response);
+    console.log("Admin Users (Admins) API Response:", response.data);
 
     if (!response.error) {
-      const data = response.data?.data || response.data?.admins || response.data || [];
+      const data = response.data?.data.data || [];
       console.log("Admin Users (Admins) Payload:", data);
 
       let filteredData = Array.isArray(data) ? data : [];
@@ -118,9 +118,7 @@ export default function AdminUsersPage() {
                   <td className="pl-5 w-12 text-center">{index + 1}</td>
                   <td className="px-5">{item.fullName || item.name}</td>
                   <td className="px-5">{item.email}</td>
-                  <td className="px-5">{item.phoneNumber || item.phone}</td>
                   <td className="px-5 capitalize">{item.role}</td>
-                  <td className="px-5">{item.assignedRequests}</td>
                   <td className="px-5">
                     <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
                       <FontAwesomeIcon className="text-primary hover:opacity-80 cursor-pointer" icon={faPen} onClick={() => openEditAdmin(item)} />
@@ -163,14 +161,12 @@ export default function AdminUsersPage() {
               initialValues={{ 
                 fullName: editingAdmin?.fullName || editingAdmin?.name || "", 
                 email: editingAdmin?.email || "", 
-                phoneNumber: editingAdmin?.phoneNumber || editingAdmin?.phone || "", 
                 password: "", 
                 role: editingAdmin?.role || "" 
               }}
               validationSchema={Yup.object({
                 fullName: Yup.string().required("Full name is required"),
                 email: Yup.string().email("Invalid email").required("Email is required"),
-                phoneNumber: Yup.string().required("Phone number is required"),
                 password: editingAdmin ? Yup.string() : Yup.string()
                   .min(6, "Password must be at least 6 characters")
                   .required("Password is required"),
@@ -188,7 +184,6 @@ export default function AdminUsersPage() {
                   const adminPayload = {
                     fullName: values.fullName,
                     email: values.email,
-                    phoneNumber: values.phoneNumber,
                     password: values.password,
                     role: values.role,
                   };
@@ -210,13 +205,12 @@ export default function AdminUsersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <TextLabelInput label="Full Name" name="fullName" type="text" placeholder="Full Name" />
                   <TextLabelInput label="Email" name="email" type="email" placeholder="Email" />
-                  <TextLabelInput label="Phone Number" name="phoneNumber" type="text" placeholder="Phone Number" />
                   {!editingAdmin && (
                     <PasswordInput label="Password" name="password" placeholder="Enter password" />
                   )}
                   <SelectInput label="Role" name="role" data={[
-                    { value: "", name: "Select role" },
                     { value: "admin", name: "Admin" },
+                    { value: "superAdmin", name: "Super Admin" },
                   ]} />
                 </div>
                 <button className="font-semibold w-full md:w-auto px-6 h-12 rounded-lg mt-6 bg-primary text-white hover:bg-green-800 active:scale-[0.98]" type="submit">Save</button>

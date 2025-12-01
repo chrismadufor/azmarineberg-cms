@@ -22,5 +22,5 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { saveProducts, saveSales, saveCustomers } = dashboardSlice.actions;
+export const { saveServices, saveRequests, saveAnalytics } = dashboardSlice.actions;
 export default dashboardSlice.reducer;

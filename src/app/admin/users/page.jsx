@@ -139,7 +139,7 @@ export default function UsersHome() {
             >
               {users.map((item, index) => (
                 <tr
-                  // onClick={() => router.push(`/admin/users/${item._id}`)}
+                  onClick={() => router.push(`/admin/users/${item._id}`)}
                   className="border-b h-14 cursor-pointer hover:bg-gray-50"
                   key={index}
                 >
@@ -199,7 +199,7 @@ export default function UsersHome() {
             >
               {users.map((item, index) => (
                 <tr
-                  // onClick={() => router.push(`/admin/users/${item._id}`)}
+                  onClick={() => router.push(`/admin/users/${item._id}`)}
                   className="border-b h-14 cursor-pointer hover:bg-gray-50"
                   key={index}
                 >
@@ -223,7 +223,7 @@ export default function UsersHome() {
       {showFormModal && (
         <Modal maxW="max-w-xl" closeModal={() => setShowFormModal(false)}>
           <ModalHeader>
-            <ModalHeaderTitle text={editingUser ? "Edit User" : "Add User"} />
+            <ModalHeaderTitle text={editingUser ? "Edit Company" : "Add Company"} />
             <ModalHeaderIcon closeModal={() => setShowFormModal(false)} />
           </ModalHeader>
           <ModalBody>
@@ -273,7 +273,6 @@ export default function UsersHome() {
                     _id: editingUser._id,
                     data: userPayload,
                   });
-                  console.log("Update User API Response:", response);
                   if (!response.error) {
                     dispatch(
                       showToast({
@@ -289,7 +288,6 @@ export default function UsersHome() {
                   }
                 } else {
                   const response = await createUser(userPayload);
-                  console.log("Create User API Response:", response);
                   if (!response.error) {
                     dispatch(
                       showToast({
@@ -423,10 +421,10 @@ export default function UsersHome() {
             <ModalHeaderTitle
               text={
                 confirmState.type === "delete"
-                  ? "Delete User"
+                  ? "Delete Company"
                   : confirmState.user?.disabled
-                  ? "Unblock User"
-                  : "Block User"
+                  ? "Unblock Company"
+                  : "Block Company"
               }
             />
             <ModalHeaderIcon closeModal={closeConfirm} />

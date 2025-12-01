@@ -42,7 +42,7 @@ export default function Login() {
       <div className="">
         <div>
           <div className="flex flex-col gap-1">
-            <h1 className="text-lg md:text-xl font-semibold">Welcome back</h1>
+            <h1 className="text-xl md:text-2xl font-semibold">Welcome back</h1>
             <p className="text-sm">Enter your details to access your account</p>
           </div>
         </div>
@@ -72,13 +72,7 @@ export default function Login() {
                     message: "Log in successful",
                   })
                 );
-                // router.push(
-                //   response.data.data.user.userType === "admin"
-                //     ? "/admin"
-                //     : response.data.data.user.userType === "consultant"
-                //     ? "/consultant"
-                //     : "/company"
-                // );
+                router.push("/dashboard");
               } else {
                 setLoading(false);
                 if (response.status === 409) {

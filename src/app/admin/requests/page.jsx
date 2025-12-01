@@ -13,7 +13,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
-import { fetchAllRequests } from "@/services/adminService";
+import { createRequest, fetchAllRequests } from "@/services/adminService";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
 import { handleAPIError, getRequestStatusColor, formatRequestStatus } from "@/utils/utils";
@@ -176,22 +176,24 @@ export default function RequestsPage() {
               validationSchema={Yup.object({
                 service: Yup.string().required("Service is required"),
                 company: Yup.string().required("User/Company is required"),
-                facilityName: Yup.string(),
-                facilityAddress: Yup.string(),
                 notes: Yup.string(),
               })}
-              onSubmit={(values) => {
-                setRequests(prev => [{
-                  _id: String(Date.now()),
-                  serviceName: values.service,
-                  companyName: values.company,
-                  facilityName: values.facilityName,
-                  facilityAddress: values.facilityAddress,
-                  notes: values.notes,
-                  assignee: undefined,
-                  date: new Date().toISOString().slice(0,10),
-                  status: "Pending",
-                }, ...(prev || [])]);
+              onSubmit={async (values) => {
+                let payload = {
+                  userId: values.company,
+                  data: {
+                    service: values.service,
+                    note: values.notes,
+                  }
+                }
+                const response = await createRequest(payload);
+                if (!response.error) {
+                  dispatch(showToast({ status: "success", message: "Request created successfully!" }));
+                  setShowAddModal(false);
+                  fetchRequests(filters);
+                } else {
+                  handleAPIError(response, dispatch, router, showToast);
+                }
                 setShowAddModal(false);
               }}
             >

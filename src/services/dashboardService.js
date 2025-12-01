@@ -37,6 +37,15 @@ export const fetchRequestById = async (id) => {
   }
 };
 
+export const sendQuery = async (values) => {
+  try {
+    const response = await http.patch(`user/send-query/${values.requestId}`, values.data);
+    return { error: false, data: response.data, status: response.status };
+  } catch (err) {
+    return getErrorData(err);
+  }
+};
+
 export const createRequest = async (values) => {
   try {
     const response = await http.post("user/create-request", values);

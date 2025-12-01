@@ -22,7 +22,7 @@ export default function ForgotPassword() {
     <AuthLayout>
       <div>
       <div className="flex flex-col gap-1">
-          <h1 className="text-lg md:text-xl font-semibold">Forgot Password</h1>
+          <h1 className="text-xl md:text-2xl font-semibold">Forgot Password</h1>
           <p className="text-sm">We got you! Enter your email to get an OTP to reset your password.</p>
         </div>
         <div className="mt-5">
@@ -58,7 +58,7 @@ export default function ForgotPassword() {
               />
             </div>
             <button
-              className="font-semibold w-full block h-12 rounded-lg mt-8 bg-green-600 text-white hover:bg-green-800 active:scale-[0.98]"
+              className="font-semibold w-full block h-12 rounded-lg mt-8 bg-primary text-white hover:bg-green-800 active:scale-[0.98]"
               type="submit"
               disabled={loading}
             >

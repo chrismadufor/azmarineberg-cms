@@ -9,9 +9,9 @@ import { TextAreaInput } from "@/components/FormFields";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faFile } from "@fortawesome/free-solid-svg-icons";
-import { fetchRequestById } from "@/services/dashboardService";
-import { useDispatch } from "react-redux";
+import { faDownload, faFile, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { fetchRequestById, sendQuery } from "@/services/dashboardService";
+import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
 import { handleAPIError, getRequestStatusColor, formatRequestStatus } from "@/utils/utils";
 import { useRouter } from "next/navigation";
@@ -21,9 +21,11 @@ export default function RequestDetailsPage() {
   const { id } = params || {};
   const dispatch = useDispatch();
   const router = useRouter();
+  const { services } = useSelector((state) => state.dashboard || { services: [] });
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showQueryModal, setShowQueryModal] = useState(false);
+  const [submittingQuery, setSubmittingQuery] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -34,12 +36,24 @@ export default function RequestDetailsPage() {
   const fetchRequestData = async () => {
     setLoading(true);
     const response = await fetchRequestById(id);
-    console.log("Dashboard Request Details API Response:", response);
-    console.log("Dashboard Request Details Payload:", response.data);
+    console.log("Dashboard Request Details Payload:", response.data?.data?.[0] || response.data);
 
     if (!response.error) {
-      const data = response.data?.data || response.data || {};
-      setRequest(data);
+      const data = response.data?.data?.[0] || response.data?.data || response.data || {};
+      
+      // Populate service from Redux store if service is just an ID
+      let populatedRequest = { ...data };
+      
+      if (data.service && typeof data.service === 'string') {
+        const serviceData = Array.isArray(services) 
+          ? services.find(s => s._id === data.service || s.id === data.service)
+          : null;
+        if (serviceData) {
+          populatedRequest.service = serviceData;
+        }
+      }
+      
+      setRequest(populatedRequest);
     } else {
       handleAPIError(response, dispatch, router, showToast);
       setRequest(null);
@@ -47,11 +61,31 @@ export default function RequestDetailsPage() {
     setLoading(false);
   };
 
-  const handleSendQuery = (values) => {
-    // In production, submit query to API
-    console.log("Query submitted:", values.query);
-    setShowQueryModal(false);
-    alert("Your query has been sent successfully!");
+  const handleSendQuery = async (values) => {
+    setSubmittingQuery(true);
+    const payload = {
+      requestId: id,
+      data: {
+        title: values.query,
+      },
+    };
+    
+    const response = await sendQuery(payload);
+    
+    if (!response.error) {
+      dispatch(
+        showToast({
+          status: "success",
+          message: "Your query has been sent successfully!",
+        })
+      );
+      setShowQueryModal(false);
+      fetchRequestData(); // Refresh request data to get updated queries
+    } else {
+      handleAPIError(response, dispatch, router, showToast);
+    }
+    
+    setSubmittingQuery(false);
   };
 
   if (loading) {
@@ -78,8 +112,17 @@ export default function RequestDetailsPage() {
   return (
     <div className="py-5">
       <div className="pb-3 border-b border-gray-200 mb-5">
-        <h1 className="font-semibold text-lg md:text-xl mb-1">{request?.service?.title || request?.serviceName || "Request Details"}</h1>
-        <p className="text-sm md:text-base text-gray-600">{request?.serviceId || request?._id || ""}</p>
+        <div className="flex items-center gap-3 mb-1">
+          <button
+            onClick={() => router.back()}
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+            aria-label="Go back"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="text-lg" />
+          </button>
+          <h1 className="font-semibold text-lg md:text-xl">{request?.service?.title || request?.serviceName || "Request Details"}</h1>
+        </div>
+        <p className="text-sm md:text-base text-gray-600 ml-8">{request?.serviceId || request?._id || ""}</p>
       </div>
 
       {/* Request Details Section */}
@@ -100,60 +143,64 @@ export default function RequestDetailsPage() {
           {request?.facilityAddress && (
             <DetailsBox label="Facility Address">{request.facilityAddress}</DetailsBox>
           )}
-          {request?.notes && (
+          {request?.note && (
             <div className="md:col-span-2">
-              <DetailsBox label="Notes">{request.notes}</DetailsBox>
+              <DetailsBox label="Notes">{request.note}</DetailsBox>
             </div>
           )}
         </div>
       </div>
 
+      {/* Pending Status Message */}
+      {(request?.status === "pending" || request?.status === "Pending") && (
+        <div className="mb-8">
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-6">
+            <p className="text-sm text-blue-800">
+              Your request has been sent to the Azmarineberg team. They will get back to you shortly.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Request Document Section */}
-      <div>
-        <h2 className="font-semibold text-base mb-4">Request Document</h2>
-        <div className="bg-white border border-gray-300 rounded-md p-6">
-          {(request?.status === "Accepted" || request?.status === "accepted" || request?.status === "processing") && (
-            <div className="mb-4">
-              <p className="text-sm text-gray-700 mb-4">Your request has been accepted. Our team is working on it.</p>
-              <button
-                onClick={() => setShowQueryModal(true)}
-                className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-colors"
-              >
-                Send Query
-              </button>
-            </div>
-          )}
-          
-          {(request?.status === "Completed" || request?.status === "completed") && (
-            <div>
-              <p className="text-sm text-gray-700 mb-4">Your request has been completed. Download the document here.</p>
-              {request.document ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <FontAwesomeIcon icon={faFile} className="text-gray-400" />
-                    <span className="text-sm">{request.document.name}</span>
-                  </div>
+      {((request?.status === "processing" || request?.status === "Processing") || 
+        (request?.status === "completed" || request?.status === "Completed")) && (
+        <div>
+          <h2 className="font-semibold text-base mb-4">Request Document</h2>
+          <div className="bg-white border border-gray-300 rounded-md p-6">
+            {(request?.status === "processing" || request?.status === "Processing") && (
+              <div>
+                <p className="text-sm text-gray-700 mb-4">The document is being worked on and will be ready soon.</p>
+                <button
+                  onClick={() => setShowQueryModal(true)}
+                  className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-colors"
+                >
+                  Send Query
+                </button>
+              </div>
+            )}
+            
+            {(request?.status === "completed" || request?.status === "Completed") && (
+              <div>
+                <p className="text-sm text-gray-700 mb-4">Your request has been completed. Download the document here.</p>
+                {request.fileUrl ? (
                   <a
-                    href={request.document.url}
+                    href={request.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-md bg-primary text-white text-sm font-medium hover:bg-green-800 transition-colors flex items-center gap-2"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-white text-sm font-medium hover:bg-green-800 transition-colors"
                   >
                     <FontAwesomeIcon icon={faDownload} />
                     <span>Download</span>
                   </a>
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">Document will be available soon.</p>
-              )}
-            </div>
-          )}
-
-          {(request?.status === "Pending" || request?.status === "pending") && (
-            <p className="text-sm text-gray-700">Your request is pending review. We'll update you once it's processed.</p>
-          )}
+                ) : (
+                  <p className="text-sm text-gray-500">Document will be available soon.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Send Query Modal */}
       {showQueryModal && (
@@ -174,7 +221,13 @@ export default function RequestDetailsPage() {
                 <div className="mb-5">
                   <TextAreaInput label="Your Query" name="query" placeholder="Enter your question or concern..." />
                 </div>
-                <button className="font-semibold w-full md:w-auto px-6 h-12 rounded-lg bg-primary text-white hover:bg-green-800 active:scale-[0.98]" type="submit">Send Query</button>
+                <button
+                  disabled={submittingQuery}
+                  className="font-semibold w-full md:w-auto px-6 h-12 rounded-lg bg-primary text-white hover:bg-green-800 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                  type="submit"
+                >
+                  {submittingQuery ? "Sending..." : "Send Query"}
+                </button>
               </Form>
             </Formik>
           </ModalBody>

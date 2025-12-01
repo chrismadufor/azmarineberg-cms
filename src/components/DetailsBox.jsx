@@ -8,7 +8,7 @@ export default function DetailsBox({ label, children }) {
       {label && (
         <p className="text-xs text-gray-500 mb-1">{label}</p>
       )}
-      <div className="bg-white border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 min-h-[40px] flex items-center">
+      <div className="bg-white border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 min-h-[48px] flex items-center">
         {children || <span>—</span>}
       </div>
     </div>

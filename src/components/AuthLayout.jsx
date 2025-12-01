@@ -3,9 +3,9 @@ import React from "react";
 export default function AuthLayout({ children }) {
   return (
     <div className="">
-      <div className="grid grid-cols-2">
+      <div className="grid lg:grid-cols-2">
         {/* image */}
-        <div className="auth-bg min-h-screen max-h-[600px] flex items-end px-5 pb-20">
+        <div className="hidden lg:flex auth-bg min-h-screen max-h-[600px] items-end px-5 pb-20">
           <div className="text-white">
             <h1 className="font-semibold mb-3 text-2xl">
               Azmarineberg Limited

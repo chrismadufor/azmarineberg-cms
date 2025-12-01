@@ -3,6 +3,7 @@
 import SearchBox from "@/components/SearchBox";
 import Table from "@/components/Table";
 import EmptyTable from "@/components/EmptyTable";
+import RequestForm from "@/components/RequestForm";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
@@ -63,8 +64,15 @@ export default function RequestsHome() {
   return (
     <div className="py-5">
       <div className="pb-3 border-b border-gray-200 mb-5">
-        <h1 className="font-semibold text-lg md:text-xl mb-1">My Requests</h1>
-        <p className="text-sm md:text-base max-w-xl">View and track all your service requests. Click a row to view details.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-semibold text-lg md:text-xl mb-1">My Requests</h1>
+            <p className="text-sm md:text-base max-w-xl">View and track all your service requests. Click a row to view details.</p>
+          </div>
+          <div>
+            <RequestForm />
+          </div>
+        </div>
       </div>
 
       <SearchBox setFilter={onSetFilter} reset={onReset} filters={filterData} />

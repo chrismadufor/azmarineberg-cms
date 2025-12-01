@@ -15,7 +15,7 @@ import moment from "moment";
 import { fetchAllServices, createService, updateService } from "@/services/adminService";
 import { useDispatch } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
-import { handleAPIError } from "@/utils/utils";
+import { handleAPIError, shortenSentence } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 
 export default function ServicesPage() {
@@ -92,7 +92,7 @@ export default function ServicesPage() {
                 <tr key={item._id} className="border-b h-14 hover:bg-gray-50">
                   <td className="pl-5 w-12 text-center">{index + 1}</td>
                   <td className="px-5">{item.title || item.name || "—"}</td>
-                  <td className="px-5">{item.description || "—"}</td>
+                  <td className="px-5">{shortenSentence(item.description) || "—"}</td>
                   <td className="px-5">{item.createdAt ? moment(item.createdAt).format("MMMM D, YYYY") : item.createdOn ? moment(item.createdOn).format("MMMM D, YYYY") : "—"}</td>
                   <td className="px-5">
                     <div className="flex items-center gap-3">

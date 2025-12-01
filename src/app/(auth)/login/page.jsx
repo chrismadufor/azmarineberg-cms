@@ -42,7 +42,7 @@ export default function Login() {
       <div className="">
         <div>
           <div className="flex flex-col gap-1">
-            <h1 className="text-lg md:text-xl font-semibold">Welcome back</h1>
+            <h1 className="text-xl md:text-2xl font-semibold">Welcome back</h1>
             <p className="text-sm">Enter your details to access your account</p>
           </div>
         </div>
@@ -61,7 +61,6 @@ export default function Login() {
             onSubmit={async (values) => {
               setLoading(true);
               const response = await signin(values);
-              console.log("Log in response", response);
               if (!response.error) {
                 setLoading(false);
                 sessionStorage.setItem("azToken", response.data.data.token);

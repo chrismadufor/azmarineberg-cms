@@ -27,6 +27,7 @@ import { changePassword } from "@/services/authService";
 
 export default function ProfileHome() {
   const user = useSelector((state) => state.auth.userProfile);
+  console.log(user);
   const dispatch = useDispatch();
   const router = useRouter();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -98,6 +99,22 @@ export default function ProfileHome() {
     setLoading(false);
   };
 
+  const getStatusColor = (status) => {
+    const statusLower = status?.toLowerCase() || "";
+    if (statusLower === "active") {
+      return "bg-green-100 text-green-700";
+    } else if (statusLower === "blocked") {
+      return "bg-red-100 text-red-700";
+    } else {
+      return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  const formatStatus = (status) => {
+    if (!status) return "Inactive";
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
   return (
     <div className="py-5">
       <div className="pb-3 border-b border-gray-200 mb-5">
@@ -119,7 +136,7 @@ export default function ProfileHome() {
             </div>
           )} */}
           <div>
-            <h1 className="font-semibold text-lg md:text-xl mb-1">
+            <h1 className="font-semibold capitalize text-lg md:text-xl mb-1">
               {user?.fullName || "User"}
             </h1>
             <p className="text-sm md:text-base text-gray-600">
@@ -309,13 +326,13 @@ export default function ProfileHome() {
                 : "—"}
             </DetailsBox>
             <DetailsBox label="Registered At">
-              {user?.registeredAt
-                ? moment(user.registeredAt).format("MMMM D, YYYY")
+              {user?.createdAt
+                ? moment(user.createdAt).format("MMMM D, YYYY")
                 : "—"}
             </DetailsBox>
             <DetailsBox label="Account Status">
-              <span className="text-xs py-1 px-2 rounded-md bg-green-100 text-green-700">
-                Active
+              <span className={`text-xs py-1 px-2 rounded-md ${getStatusColor(user?.status)}`}>
+                {formatStatus(user?.status)}
               </span>
             </DetailsBox>
           </div>

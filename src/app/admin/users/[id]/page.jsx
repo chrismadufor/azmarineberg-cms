@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import DetailsBox from "@/components/DetailsBox";
-import { fetchUserById } from "@/services/adminService";
+import { fetchUserById, fetchUserRequests } from "@/services/adminService";
 import { useDispatch } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
 import { handleAPIError } from "@/utils/utils";
@@ -21,10 +21,12 @@ export default function UserDetailsPage() {
   const [requests, setRequests] = useState([]);
   const [paginationData, setPaginationData] = useState({ total: 0, current_page: 1, pages: 1 });
   const [loading, setLoading] = useState(true);
+  const [requestsLoading, setRequestsLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     getUserDetails(id);
+    getUserRequests(id);
   }, [id]);
 
   const getUserDetails = async (userId) => {
@@ -37,15 +39,7 @@ export default function UserDetailsPage() {
       console.log("Admin User Details Payload:", data);
 
       const userData = data?.user || data;
-      const userRequests = data?.requests || [];
-
       setUser(userData);
-      setRequests(Array.isArray(userRequests) ? userRequests : []);
-      setPaginationData({
-        total: Array.isArray(userRequests) ? userRequests.length : 0,
-        current_page: 1,
-        pages: 1,
-      });
     } else {
       setUser(null);
       setRequests([]);
@@ -56,7 +50,51 @@ export default function UserDetailsPage() {
     setLoading(false);
   };
 
-  const columns = ["Service Name", "Date", "Status", "Assignee"];
+  const getUserRequests = async (userId) => {
+    setRequestsLoading(true);
+    const response = await fetchUserRequests(userId);
+    console.log("Admin User Requests API Response:", response);
+
+    if (!response.error) {
+      const payload = response.data?.data || response.data || {};
+      const rawRequests =
+        payload?.requests ||
+        payload?.data?.requests ||
+        payload?.data ||
+        payload?.requestsData ||
+        payload;
+      const normalizedRequests = Array.isArray(rawRequests) ? rawRequests : [];
+      const paginationPayload =
+        payload?.pagination ||
+        payload?.data?.pagination ||
+        payload?.meta ||
+        {};
+
+      setRequests(normalizedRequests);
+      setPaginationData({
+        total:
+          paginationPayload.total ??
+          paginationPayload.requestCount ??
+          normalizedRequests.length,
+        current_page:
+          paginationPayload.current_page ??
+          paginationPayload.page ??
+          1,
+        pages:
+          paginationPayload.pages ??
+          paginationPayload.total_pages ??
+          1,
+      });
+    } else {
+      setRequests([]);
+      setPaginationData({ total: 0, current_page: 1, pages: 1 });
+      handleAPIError(response, dispatch, router, showToast);
+    }
+
+    setRequestsLoading(false);
+  };
+
+  const columns = ["Service Name", "Date", "Status"];
 
   const getStatusColor = (status) => {
     const statusLower = status?.toLowerCase() || "";
@@ -99,15 +137,15 @@ export default function UserDetailsPage() {
     <div className="py-5">
       <div className="pb-3 border-b border-gray-200 mb-5">
         <div className="flex items-center gap-4 mb-4">
-          {user?.photo ? (
+          {/* {user?.photo ? (
             <img src={user.photo} alt={user.fullName || user.name} className="w-20 h-20 rounded-full object-cover" />
           ) : (
-            <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
+            <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold uppercase">
               {(user?.fullName || user?.name)?.split(" ").map((n) => n[0]).join("").slice(0, 2) || "—"}
             </div>
-          )}
+          )} */}
           <div>
-            <h1 className="font-semibold text-2xl md:text-3xl mb-1">{user?.fullName || user?.name || "User"}</h1>
+            <h1 className="font-semibold text-2xl md:text-3xl mb-1 capitalize">{user?.fullName || user?.name || "User"}</h1>
             <p className="text-sm md:text-base text-gray-600">{user?.email || ""}</p>
           </div>
         </div>
@@ -130,7 +168,7 @@ export default function UserDetailsPage() {
               {user?.status ? user.status.charAt(0).toUpperCase() + user.status.slice(1) : "—"}
             </span>
           </DetailsBox>
-          <DetailsBox label="Full Name">{user?.fullName || user?.name || "—"}</DetailsBox>
+          <DetailsBox label="Full Name"><span className="capitalize">{user?.fullName || user?.name || "—"}</span></DetailsBox>
           <DetailsBox label="Email">
             <div className="flex items-center gap-2">
               <span>{user?.email || "—"}</span>
@@ -161,7 +199,7 @@ export default function UserDetailsPage() {
 
       {activeTab === "requests" && (
         <div className="mt-3">
-          {loading ? (
+          {requestsLoading ? (
             <div className="text-center py-8">
               <p className="text-sm text-gray-500">Loading requests...</p>
             </div>
@@ -177,7 +215,6 @@ export default function UserDetailsPage() {
                       {formatStatus(item?.status)}
                     </span>
                   </td>
-                  <td className="px-5">{item?.assignee || "—"}</td>
                 </tr>
               ))}
             </Table>

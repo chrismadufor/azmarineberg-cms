@@ -19,6 +19,15 @@ export const fetchAllRequests = async (values) => {
   }
 };
 
+export const createRequest = async (values) => {
+  try {
+    const response = await http.post(`admin/create-request/${values.userId}`, values.data);
+    return { error: false, data: response.data, status: response.status };
+  } catch (err) {
+    return getErrorData(err);
+  }
+};
+
 export const fetchAllServices = async (values) => {
   try {
     const response = await http.get(`admin/services${values ? "?" + setFilterParams(values) : ""}`);
@@ -36,6 +45,7 @@ export const createService = async (values) => {
     return getErrorData(err);
   }
 };
+
 
 export const updateService = async (values) => {
   try {
@@ -64,9 +74,20 @@ export const createAdmin = async (values) => {
   }
 };
 
+export const fileUpload = async (values) => {
+  try {
+    // FormData is handled automatically by axios interceptor
+    // The interceptor will remove Content-Type header for FormData
+    const response = await http.post("utility/file-upload", values);
+    return { error: false, data: response.data, status: response.status };
+  } catch (err) {
+    return getErrorData(err);
+  }
+};
+
 export const createUser = async (values) => {
   try {
-    const response = await http.post("admin/register", values);
+    const response = await http.post("admin/register-user", values);
     return { error: false, data: response.data, status: response.status };
   } catch (err) {
     return getErrorData(err);
@@ -84,7 +105,16 @@ export const updateUser = async (values) => {
 
 export const fetchUserById = async (id) => {
   try {
-    const response = await http.get(`admin/user/${id}`);
+    const response = await http.get(`admin/get-user-by-id/${id}`);
+    return { error: false, data: response.data, status: response.status };
+  } catch (err) {
+    return getErrorData(err);
+  }
+};
+
+export const fetchUserRequests = async (id) => {
+  try {
+    const response = await http.get(`admin/requests/${id}`);
     return { error: false, data: response.data, status: response.status };
   } catch (err) {
     return getErrorData(err);
@@ -93,7 +123,7 @@ export const fetchUserById = async (id) => {
 
 export const fetchAdminUsers = async (values) => {
   try {
-    const response = await http.get(`admin/admin-users${values ? "?" + setFilterParams(values) : ""}`);
+    const response = await http.get(`admin/admins${values ? "?" + setFilterParams(values) : ""}`);
     return { error: false, data: response.data, status: response.status };
   } catch (err) {
     return getErrorData(err);
@@ -103,6 +133,24 @@ export const fetchAdminUsers = async (values) => {
 export const fetchRequestById = async (id) => {
   try {
     const response = await http.get(`admin/request/${id}`);
+    return { error: false, data: response.data, status: response.status };
+  } catch (err) {
+    return getErrorData(err);
+  }
+};
+
+export const updateRequestStatus = async (id, status) => {
+  try {
+    const response = await http.patch(`admin/update-request-status/${id}`, { status });
+    return { error: false, data: response.data, status: response.status };
+  } catch (err) {
+    return getErrorData(err);
+  }
+};
+
+export const updateRequestFile = async (id, fileUrl) => {
+  try {
+    const response = await http.patch(`admin/update-request-file/${id}`, { fileUrl });
     return { error: false, data: response.data, status: response.status };
   } catch (err) {
     return getErrorData(err);

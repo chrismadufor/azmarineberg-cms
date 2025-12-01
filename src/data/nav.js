@@ -49,10 +49,10 @@ export const navLinks = {
       icon: faDatabase,
       link: "services",
     },
-    // {
-    //   name: "admins",
-    //   icon: faCogs,
-    //   link: "admin-users",
-    // }
+    {
+      name: "admins",
+      icon: faCogs,
+      link: "admin-users",
+    }
   ],
 };

@@ -6,9 +6,10 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import RequestForm from "@/components/RequestForm";
 import { useSelector } from "react-redux";
-import { fetchAnalytics } from "@/services/dashboardService";
+import { fetchAnalytics, fetchRequests, fetchServices } from "@/services/dashboardService";
 import { useDispatch } from "react-redux";
 import { showToast } from "@/redux/slices/ToastSlice";
+import { saveServices, saveRequests, saveAnalytics } from "@/redux/slices/dashboardSlice";
 import { handleAPIError, getRequestStatusColor, formatRequestStatus } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 import moment from "moment";
@@ -28,15 +29,48 @@ export default function DashboardHome() {
 
   const fetchData = async () => {
     setLoading(true);
-    const response = await fetchAnalytics();
-    console.log("Dashboard Analytics API Response:", response);
+    
+    // Fetch all data in parallel
+    const [analyticsResponse, servicesResponse, requestsResponse] = await Promise.all([
+      fetchAnalytics(),
+      fetchServices(),
+      fetchRequests({ pageNumber: 1 }),
+    ]);
 
-    if (!response.error) {
-      const data = response.data?.data;
+    // Handle analytics
+    if (!analyticsResponse.error) {
+      const data = analyticsResponse.data?.data; 
       setAnalytics(data);
+      dispatch(saveAnalytics(data));
     } else {
       setAnalytics(null);
-      handleAPIError(response, dispatch, router, showToast);
+      handleAPIError(analyticsResponse, dispatch, router, showToast);
+    }
+
+    // Handle services
+    if (!servicesResponse.error) {
+      const servicesData = servicesResponse.data?.data.data || [];
+      console.log("Services Data:", servicesResponse.data?.data);
+      const servicesArray = Array.isArray(servicesData) ? servicesData : [];
+      dispatch(saveServices(servicesArray));
+      setServicesData(servicesArray.slice(0, 5));
+    } else {
+      console.error("Failed to fetch services:", servicesResponse);
+      dispatch(saveServices([]));
+      setServicesData([]);
+    }
+
+    // Handle requests
+    if (!requestsResponse.error) {
+      console.log("Dashboard Requests API Response:", requestsResponse);
+      const requestsData = requestsResponse.data?.data?.requests || [];
+      const requestsArray = Array.isArray(requestsData) ? requestsData : [];
+      dispatch(saveRequests(requestsArray));
+      setRequestsData(requestsArray.slice(0, 5));
+    } else {
+      console.error("Failed to fetch requests:", requestsResponse);
+      dispatch(saveRequests([]));
+      setRequestsData([]);
     }
 
     setLoading(false);
@@ -69,7 +103,7 @@ export default function DashboardHome() {
     <div>
       <div className="flex items-center justify-between">
         <div className="mt-3 mb-6">
-          <h1 className="font-semibold text-xl">Welcome {user?.fullName || "User"}!</h1>
+          <h1 className="font-semibold text-xl">Welcome <span className="capitalize">{user?.fullName || "User"}</span>!</h1>
           <p>What will you do today?</p>
         </div>
         <div>
@@ -115,7 +149,7 @@ export default function DashboardHome() {
                   </tr>
                 ) : requestsData.length > 0 ? (
                   requestsData.map((item, index) => (
-                    <tr key={item._id || index} className="border-t h-12">
+                    <tr onClick={() => router.push(`/dashboard/requests/${item._id}`)} key={item._id || index} className="border-t h-12">
                       <td className="px-4">{item.service?.title || item.serviceName || item.title || item.service?.name || "N/A"}</td>
                       <td className="px-4">
                         {item.date

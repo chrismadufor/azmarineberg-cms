@@ -23,7 +23,7 @@ export default function ResetPassword() {
     <AuthLayout>
       <div>
       <div className="flex flex-col gap-1">
-          <h1 className="text-lg md:text-xl font-semibold">Reset Password</h1>
+          <h1 className="text-xl md:text-2xl font-semibold">Reset Password</h1>
           <p className="text-sm md:text-base">Almost there! Enter the OTP sent to your email and a new password to get access to your account.</p>
         </div>
         <div className="mt-5">
