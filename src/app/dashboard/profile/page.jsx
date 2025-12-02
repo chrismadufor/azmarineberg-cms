@@ -27,7 +27,7 @@ import { changePassword } from "@/services/authService";
 
 export default function ProfileHome() {
   const user = useSelector((state) => state.auth.userProfile);
-  console.log(user);
+  // console.log(user);
   const dispatch = useDispatch();
   const router = useRouter();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -59,7 +59,7 @@ export default function ProfileHome() {
         profilePhotoPreview !== user?.photo && { photo: profilePhotoPreview }),
     };
     const response = await updateProfile(payload);
-    console.log("Update Profile API Response:", response);
+    // console.log("Update Profile API Response:", response);
     if (!response.error) {
       dispatch(
         showToast({
@@ -84,7 +84,7 @@ export default function ProfileHome() {
       confirmPassword: values.confirmPassword,
     };
     const response = await changePassword(payload);
-    console.log("Change Password API Response:", response);
+    // console.log("Change Password API Response:", response);
     if (!response.error) {
       dispatch(
         showToast({

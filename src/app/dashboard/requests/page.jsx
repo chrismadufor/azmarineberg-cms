@@ -38,11 +38,11 @@ export default function RequestsHome() {
   const getRequests = async (f) => {
     setLoading(true);
     const response = await fetchRequests(f);
-    console.log("Dashboard Requests API Response:", response);
+    // console.log("Dashboard Requests API Response:", response);
 
     if (!response.error) {
       const data = response.data?.data;
-      console.log("Dashboard Requests Payload:", data);
+      // console.log("Dashboard Requests Payload:", data);
 
       setPaginationData({ total: data.requestCount, current_page: data.page, pages: data.pages });
       setRequests(data.requests);

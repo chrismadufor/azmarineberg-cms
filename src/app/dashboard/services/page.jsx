@@ -24,11 +24,11 @@ export default function ServicesHome() {
 
   const fetchServicesData = async () => {
     const response = await fetchServices();
-    console.log("Dashboard Services API Response:", response);
+    // console.log("Dashboard Services API Response:", response);
 
     if (!response.error) {
       const data = response.data?.data.data || [];
-      console.log("Dashboard Services Payload:", data);
+      // console.log("Dashboard Services Payload:", data);
       setServices(Array.isArray(data) ? data : []);
     } else {
       handleAPIError(response, dispatch, router, showToast);

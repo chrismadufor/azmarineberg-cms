@@ -61,7 +61,7 @@ export default function Login() {
             onSubmit={async (values) => {
               setLoading(true);
               const response = await signin(values);
-              console.log("Log in response", response);
+              // console.log("Log in response", response);
               if (!response.error) {
                 setLoading(false);
                 sessionStorage.setItem("azToken", response.data.data.token);

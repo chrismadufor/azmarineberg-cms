@@ -136,7 +136,7 @@ export default function RequestDetailsPage() {
           const updateResponse = await updateRequestFile(id, fileUrl);
           
           if (!updateResponse.error) {
-            console.log("Update Request File Success Payload:", updateResponse.data);
+            // console.log("Update Request File Success Payload:", updateResponse.data);
             dispatch(
               showToast({
                 status: "success",

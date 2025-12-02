@@ -49,11 +49,11 @@ export default function AdminUsersPage() {
   const getAdminUsers = async (f) => {
     setLoading(true);
     const response = await fetchAdminUsers(f);
-    console.log("Admin Users (Admins) API Response:", response.data);
+    // console.log("Admin Users (Admins) API Response:", response.data);
 
     if (!response.error) {
       const data = response.data?.data.data || [];
-      console.log("Admin Users (Admins) Payload:", data);
+      // console.log("Admin Users (Admins) Payload:", data);
 
       let filteredData = Array.isArray(data) ? data : [];
       if (f.searchByName) {
@@ -188,7 +188,7 @@ export default function AdminUsersPage() {
                     role: values.role,
                   };
                   const response = await createAdmin(adminPayload);
-                  console.log("Create Admin API Response:", response);
+                  // console.log("Create Admin API Response:", response);
                   if (!response.error) {
                     dispatch(showToast({ status: "success", message: "Admin created successfully" }));
                     // Refresh the list or add the new admin

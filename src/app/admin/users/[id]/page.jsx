@@ -32,11 +32,11 @@ export default function UserDetailsPage() {
   const getUserDetails = async (userId) => {
     setLoading(true);
     const response = await fetchUserById(userId);
-    console.log("Admin User Details API Response:", response);
+    // console.log("Admin User Details API Response:", response);
 
     if (!response.error) {
       const data = response.data?.data || response.data || {};
-      console.log("Admin User Details Payload:", data);
+      // console.log("Admin User Details Payload:", data);
 
       const userData = data?.user || data;
       setUser(userData);
@@ -53,7 +53,7 @@ export default function UserDetailsPage() {
   const getUserRequests = async (userId) => {
     setRequestsLoading(true);
     const response = await fetchUserRequests(userId);
-    console.log("Admin User Requests API Response:", response);
+    // console.log("Admin User Requests API Response:", response);
 
     if (!response.error) {
       const payload = response.data?.data || response.data || {};

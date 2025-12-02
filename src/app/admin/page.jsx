@@ -65,7 +65,7 @@ export default function AdminHome() {
 
     // Handle users
     if (!usersResponse.error) {
-      console.log("Admin Users API Response:", usersResponse);
+      // console.log("Admin Users API Response:", usersResponse);
       const usersData = usersResponse.data?.data.users;
       const usersArray = Array.isArray(usersData) ? usersData : [];
       dispatch(saveUsers(usersArray));
@@ -78,7 +78,7 @@ export default function AdminHome() {
 
     // Handle requests
     if (!requestsResponse.error) {
-      console.log("Admin Requests API Response:", requestsResponse);
+      // console.log("Admin Requests API Response:", requestsResponse);
       const requestsData = requestsResponse.data?.data?.data.requests;
       dispatch(saveRequests(Array.isArray(requestsData) ? requestsData : []));
       setRequestsData(requestsData.slice(0, 5));
@@ -141,12 +141,14 @@ export default function AdminHome() {
         {cardData.map((item, index) => (
           <div
             key={index}
-            className="bg-white border border-gray-300 rounded-md px-4 py-5"
+            className="bg-white border border-gray-300 rounded-md px-4 py-5 min-h-[120px]"
           >
             <p className="text-sm font-medium mb-4">{item.title}</p>
             <div className="flex items-center justify-between">
               <p className="font-semibold text-xl">{item.value}</p>
-              <FontAwesomeIcon icon={item.icon} className="text-primary text-2xl" />
+              <div className="flex-shrink-0">
+                <FontAwesomeIcon icon={item.icon} className="text-primary text-2xl" style={{ width: '1.5rem', height: '1.5rem', display: 'block' }} />
+              </div>
             </div>
           </div>
         ))}

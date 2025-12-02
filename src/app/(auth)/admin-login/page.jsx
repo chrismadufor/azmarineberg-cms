@@ -63,7 +63,7 @@ export default function AdminLogin() {
             onSubmit={async (values) => {
               setLoading(true);
               const response = await adminSignin(values);
-              console.log("Log in response", response);
+              // console.log("Log in response", response);
               if (!response.error) {
                 setLoading(false);
                 sessionStorage.setItem("azToken", response.data.data.data.token);

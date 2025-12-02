@@ -64,11 +64,11 @@ export default function RequestsPage() {
   const getRequests = async (f) => {
     setLoading(true);
     const response = await fetchAllRequests(f);
-    console.log("Admin Requests API Response:", response);
+    // console.log("Admin Requests API Response:", response);
 
     if (!response.error) {
       const data = response.data?.data?.data;
-      console.log("Admin Requests Payload:", data);
+      // console.log("Admin Requests Payload:", data);
       
       const pagination = data.requestCount !== undefined ? {
         total: data.requestCount,

@@ -43,7 +43,7 @@ export default function ServicesPage() {
   const getServices = async (f) => {
     setLoading(true);
     const response = await fetchAllServices(f);
-    console.log("Admin Services API Response:", response);
+    // console.log("Admin Services API Response:", response);
 
     if (!response.error) {
       const data = response.data?.data.data;
@@ -139,7 +139,7 @@ export default function ServicesPage() {
               onSubmit={async (values) => {
                 setSubmitting(true);
                 const response = await createService(values);
-                console.log("Create Service API Response:", response);
+                // console.log("Create Service API Response:", response);
 
                 if (!response.error) {
                   dispatch(showToast({ status: "success", message: "Service created successfully" }));
@@ -188,7 +188,7 @@ export default function ServicesPage() {
               onSubmit={async (values) => {
                 setSubmitting(true);
                 const response = await updateService({ _id: editingService._id, data: values });
-                console.log("Update Service API Response:", response);
+                // console.log("Update Service API Response:", response);
 
                 if (!response.error) {
                   dispatch(showToast({ status: "success", message: "Service updated successfully" }));

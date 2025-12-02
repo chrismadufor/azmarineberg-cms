@@ -27,7 +27,7 @@ export const signin = async (values) => {
 export const adminSignin = async (values) => {
   try {
     let response = await http.post("admin/login", values);
-    console.log("Admin sign in response", response);
+    // console.log("Admin sign in response", response);
     return { error: false, data: response.data, status: response.status };
   } catch (err) {
     return getErrorData(err)

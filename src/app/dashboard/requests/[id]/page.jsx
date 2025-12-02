@@ -36,7 +36,7 @@ export default function RequestDetailsPage() {
   const fetchRequestData = async () => {
     setLoading(true);
     const response = await fetchRequestById(id);
-    console.log("Dashboard Request Details Payload:", response.data?.data?.[0] || response.data);
+    // console.log("Dashboard Request Details Payload:", response.data?.data?.[0] || response.data);
 
     if (!response.error) {
       const data = response.data?.data?.[0] || response.data?.data || response.data || {};

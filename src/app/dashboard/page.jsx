@@ -50,7 +50,7 @@ export default function DashboardHome() {
     // Handle services
     if (!servicesResponse.error) {
       const servicesData = servicesResponse.data?.data.data || [];
-      console.log("Services Data:", servicesResponse.data?.data);
+      // console.log("Services Data:", servicesResponse.data?.data);
       const servicesArray = Array.isArray(servicesData) ? servicesData : [];
       dispatch(saveServices(servicesArray));
       setServicesData(servicesArray.slice(0, 5));
@@ -62,7 +62,7 @@ export default function DashboardHome() {
 
     // Handle requests
     if (!requestsResponse.error) {
-      console.log("Dashboard Requests API Response:", requestsResponse);
+      // console.log("Dashboard Requests API Response:", requestsResponse);
       const requestsData = requestsResponse.data?.data?.requests || [];
       const requestsArray = Array.isArray(requestsData) ? requestsData : [];
       dispatch(saveRequests(requestsArray));
@@ -114,12 +114,14 @@ export default function DashboardHome() {
         {cardData.map((item, index) => (
           <div
             key={index}
-            className="bg-white border border-gray-300 rounded-md px-4 py-5"
+            className="bg-white border border-gray-300 rounded-md px-4 py-5 min-h-[120px]"
           >
             <p className="text-sm font-medium mb-4">{item.title}</p>
             <div className="flex items-center justify-between">
               <p className="font-semibold text-xl">{item.value}</p>
-              <FontAwesomeIcon icon={item.icon} className="text-primary text-2xl" />
+              <div className="flex-shrink-0">
+                <FontAwesomeIcon icon={item.icon} className="text-primary text-2xl" style={{ width: '1.5rem', height: '1.5rem', display: 'block' }} />
+              </div>
             </div>
           </div>
         ))}
