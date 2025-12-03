@@ -40,7 +40,13 @@ export default function ForgotPassword() {
             const response = await forgotPassword(values);
             if (!response.error) {
               setLoading(false);
-              dispatch(saveEmail(values.email))
+              dispatch(saveEmail(values.email));
+              dispatch(
+                showToast({
+                  status: "success",
+                  message: "OTP sent successfully. Please check your email.",
+                })
+              );
               router.push("/reset-password");
             } else {
               setLoading(false);

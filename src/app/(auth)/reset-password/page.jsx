@@ -40,8 +40,11 @@ export default function ResetPassword() {
           })}
           onSubmit={async (values, { setSubmitting }) => {
             let data = {
-              email: userEmail, ...values
-            }
+              email: userEmail,
+              otp: values.otp,
+              newPassword: values.newPassword,
+              repeatPassword: values.repeatPassword
+            };
             setLoading(true);
             const response = await resetPassword(data);
             if (!response.error) {
